@@ -1,6 +1,9 @@
 asgiref==3.4.1
 Django==4.0
+djangorestframework==3.13.0
+future==0.18.2
 psycopg2==2.9.2; platform_system == 'Windows'
 psycopg2-binary==2.9.2; platform_system == 'Linux'
+pytz==2021.3
 sqlparse==0.4.2
 tzdata==2021.5

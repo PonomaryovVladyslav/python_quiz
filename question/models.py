@@ -26,6 +26,7 @@ class Student(BaseModel):
 
 class Question(BaseModel):
     text = models.CharField(max_length=4000)
+    lesson = models.PositiveSmallIntegerField()
 
 
 class Option(BaseModel):
