@@ -1,9 +1,12 @@
+from django.db import transaction
 from rest_framework import mixins
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
-from question.API.serializers import QuestionSerializer, AuthTokenActiveSerializer
-from question.models import Question
+from question.API.permissions import IsRegisterOrGetListOfUsers
+from question.API.serializers import QuestionSerializer, AuthTokenActiveSerializer, UserSerializer
+from question.models import Question, User
 
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -33,3 +36,25 @@ class CustomAuthToken(ObtainAuthToken):
             'token': token.key,
             'username': user.username,
         })
+
+
+class UserViewSet(mixins.CreateModelMixin,
+                  mixins.ListModelMixin,
+                  GenericViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.filter(is_active=False)
+    permission_classes = [IsRegisterOrGetListOfUsers, ]
+
+    def perform_create(self, serializer):
+        with transaction.atomic():
+            password = serializer.validated_data.get('password')
+            user = serializer.save()
+            user.set_password(password)
+            user.save()
+
+    @action(methods=['post'], detail=True)
+    def approve(self, request, pk=None):
+        user = self.get_object()
+        user.is_active = True
+        user.save()
+        return Response({'status': 'approved'})

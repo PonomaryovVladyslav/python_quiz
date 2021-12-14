@@ -12,6 +12,10 @@ class BaseModel(models.Model):
 class User(AbstractUser):
     is_active = models.BooleanField(default=False)
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}" if self.first_name or self.last_name else 'Not provided'
+
 
 class Specialization(BaseModel):
     name = models.CharField(max_length=100)

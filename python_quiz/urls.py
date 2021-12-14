@@ -17,11 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework.routers import SimpleRouter
-
-from question.API.resources import QuestionViewSet, CustomAuthToken
+from question.API.resources import QuestionViewSet, CustomAuthToken, UserViewSet
 
 router = SimpleRouter()
 router.register('question', QuestionViewSet)
+router.register('user', UserViewSet)
 
 urlpatterns = {
     path('admin/', admin.site.urls),

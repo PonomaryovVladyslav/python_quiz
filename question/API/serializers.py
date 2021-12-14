@@ -4,6 +4,8 @@ from django.db import transaction
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
+from django.core import exceptions
+import django.contrib.auth.password_validation as validators
 
 
 class OptionSerializer(serializers.ModelSerializer):
@@ -59,3 +61,37 @@ class AuthTokenActiveSerializer(AuthTokenSerializer):
 
         attrs['user'] = user
         return attrs
+
+
+class UserSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(read_only=True)
+    password = serializers.CharField(write_only=True)
+    first_name = serializers.CharField(write_only=True, required=False)
+    last_name = serializers.CharField(write_only=True, required=False)
+    date_joined = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password', 'full_name', 'first_name', 'last_name', 'email', 'date_joined')
+
+    def validate(self, data):
+        # here data has all the fields which have validated values
+        # so we can create a User instance out of it
+        user = User(**data)
+
+        # get the password from the data
+        password = data.get('password')
+
+        errors = dict()
+        try:
+            # validate the password and catch the exception
+            validators.validate_password(password=password, user=user)
+
+        # the exception raised here is different than serializers.ValidationError
+        except exceptions.ValidationError as e:
+            errors['password'] = list(e.messages)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        return super(UserSerializer, self).validate(data)
