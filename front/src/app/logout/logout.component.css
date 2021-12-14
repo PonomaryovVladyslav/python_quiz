@@ -1,0 +1,9 @@
+.logout-panel{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.logout-panel div{
+  margin-right: 20px;
+}

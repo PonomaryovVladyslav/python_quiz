@@ -16,10 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import SimpleRouter
 
-from question.API.resources import QuestionViewSet
+from question.API.resources import QuestionViewSet, CustomAuthToken
 
 router = SimpleRouter()
 router.register('question', QuestionViewSet)
@@ -27,6 +26,6 @@ router.register('question', QuestionViewSet)
 urlpatterns = {
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html')),
-    path('login/', obtain_auth_token),
+    path('api/login/', CustomAuthToken.as_view()),
     path('api/', include(router.urls))
 }

@@ -10,11 +10,16 @@ class BaseModel(models.Model):
 
 
 class User(AbstractUser):
-    pass
+    is_active = models.BooleanField(default=False)
+
+
+class Specialization(BaseModel):
+    name = models.CharField(max_length=100)
 
 
 class StudentGroup(BaseModel):
     name = models.CharField(max_length=100)
+    specialization = models.ForeignKey(Specialization, on_delete=models.CASCADE, related_name='studentgroups')
 
 
 class Student(BaseModel):
@@ -27,6 +32,7 @@ class Student(BaseModel):
 class Question(BaseModel):
     text = models.CharField(max_length=4000)
     lesson = models.PositiveSmallIntegerField()
+    specialization = models.ForeignKey(Specialization, on_delete=models.CASCADE, related_name='questions')
 
 
 class Option(BaseModel):
