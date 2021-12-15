@@ -1,0 +1,9 @@
+.first-last-name{
+  display: flex;
+  justify-content: space-between;
+}
+/*.cdk-overlay-container mat-dialog-container{*/
+/*  background-color: #156274 !important;*/
+/*}*/
+
+

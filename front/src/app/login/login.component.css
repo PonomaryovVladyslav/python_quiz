@@ -1,12 +1,17 @@
 .login-form {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  max-width: 400px;
+  margin: auto;
+  padding-top: 20px;
 }
 
 .login-form form {
   display: flex;
   flex-direction: column;
 }
+
 .show {
- display: block !important;
+  display: block !important;
 }
